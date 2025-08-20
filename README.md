@@ -73,6 +73,7 @@ make run
 ```
 
 This command will:
+
 - Start PostgreSQL, Redis, and Kafka
 - Create necessary Kafka topics
 - Build and deploy all microservices
@@ -91,17 +92,18 @@ Visit these endpoints to confirm everything is working:
 
 ### Service Endpoints
 
-| Service | Port | Health Check | Swagger Docs |
-|---------|------|-------------|--------------|
-| User Service | 8001 | `/health` | `/swagger/index.html` |
-| Shipment Service | 8002 | `/health` | `/swagger/index.html` |
-| Alert Service | 8003 | `/health` | `/swagger/index.html` |
-| Payment Service | 8004 | `/health` | `/swagger/index.html` |
-| Analytics Service | 8005 | `/health` | `/swagger/index.html` |
+| Service           | Port | Health Check | Swagger Docs          |
+| ----------------- | ---- | ------------ | --------------------- |
+| User Service      | 8001 | `/health`    | `/swagger/index.html` |
+| Shipment Service  | 8002 | `/health`    | `/swagger/index.html` |
+| Alert Service     | 8003 | `/health`    | `/swagger/index.html` |
+| Payment Service   | 8004 | `/health`    | `/swagger/index.html` |
+| Analytics Service | 8005 | `/health`    | `/swagger/index.html` |
 
 ### Key API Endpoints
 
 #### Authentication
+
 ```bash
 # Register new user
 POST /api/v1/auth/register
@@ -120,6 +122,7 @@ POST /api/v1/auth/login
 ```
 
 #### Shipment Management
+
 ```bash
 # Create shipment
 POST /api/v1/shipments
@@ -137,6 +140,7 @@ GET /api/v1/shipments/{shipment_id}
 ```
 
 #### Analytics Dashboard
+
 ```bash
 # Get dashboard metrics
 GET /api/v1/analytics/dashboard
@@ -192,13 +196,13 @@ make kafka-topics   # List Kafka topics
 
 ### Environment Variables
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `DATABASE_URL` | PostgreSQL connection string | `postgres://postgres:postgres@localhost:5432/supply_chain_db` |
-| `REDIS_URL` | Redis connection string | `redis://localhost:6379` |
-| `KAFKA_BROKERS` | Kafka broker addresses | `localhost:9092` |
-| `STRIPE_SECRET_KEY` | Stripe API secret key | Required for payments |
-| `JWT_SECRET` | JWT signing secret | `your-jwt-secret-key` |
+| Variable            | Description                  | Default                                                       |
+| ------------------- | ---------------------------- | ------------------------------------------------------------- |
+| `DATABASE_URL`      | PostgreSQL connection string | `postgres://postgres:postgres@localhost:5432/supply_chain_db` |
+| `REDIS_URL`         | Redis connection string      | `redis://localhost:6379`                                      |
+| `KAFKA_BROKERS`     | Kafka broker addresses       | `localhost:9092`                                              |
+| `STRIPE_SECRET_KEY` | Stripe API secret key        | Required for payments                                         |
+| `JWT_SECRET`        | JWT signing secret           | `your-jwt-secret-key`                                         |
 
 ### Service Ports
 
@@ -218,6 +222,7 @@ make kafka-topics   # List Kafka topics
 ### Prometheus Metrics
 
 Each service exposes metrics at `/metrics`:
+
 - Request duration and count
 - Error rates and types
 - Business metrics (shipments created, alerts sent)
@@ -226,6 +231,7 @@ Each service exposes metrics at `/metrics`:
 ### Grafana Dashboards
 
 Pre-configured dashboards for:
+
 - Service health and performance
 - Business metrics and KPIs
 - Infrastructure monitoring
@@ -234,6 +240,7 @@ Pre-configured dashboards for:
 ### Health Checks
 
 All services provide detailed health checks including:
+
 - Database connectivity
 - Kafka connection status
 - External API availability
@@ -314,6 +321,7 @@ kubectl scale deployment shipment-service --replicas=3
 ### Event Processing
 
 Each service consumes relevant events:
+
 - **Alert Service**: Processes shipment events for notifications
 - **Analytics Service**: Aggregates events for business intelligence
 - **Payment Service**: Handles billing and subscription events
@@ -346,18 +354,21 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🗺️ Roadmap
 
 ### Phase 1 (Completed) ✅
+
 - [x] Core microservices architecture
 - [x] Real-time WebSocket tracking
 - [x] Kafka event streaming
 - [x] Basic analytics dashboard
 
 ### Phase 2 (In Progress) 🚧
+
 - [ ] Machine learning delay prediction
 - [ ] Advanced route optimization
 - [ ] Mobile API support
 - [ ] Enhanced security features
 
 ### Phase 3 (Planned) 📋
+
 - [ ] IoT device integration
 - [ ] Blockchain tracking verification
 - [ ] Multi-tenant support
