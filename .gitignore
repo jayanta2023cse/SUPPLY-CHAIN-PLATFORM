@@ -1,0 +1,10 @@
+.env*
+bin
+supply_chain_platform.log
+
+apps/admin/docs
+apps/authentication/docs
+apps/notification/docs
+apps/shipment/docs
+apps/payment/docs
+

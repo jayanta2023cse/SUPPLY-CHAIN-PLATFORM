@@ -1,0 +1,152 @@
+# .PHONY: help build run test clean docker-up docker-down swagger deps
+
+# # Default target
+# help:
+# 	@echo "🚚 Supply Chain Platform - Development Commands"
+# 	@echo "================================================="
+# 	@echo ""
+# 	@echo "📋 Available commands:"
+# 	@echo "  make deps          - Download Go dependencies"
+# 	@echo "  make build         - Build all microservices"
+# 	@echo "  make run           - Run all services with Docker Compose"
+# 	@echo "  make test          - Run all tests"
+# 	@echo "  make swagger       - Generate Swagger documentation"
+# 	@echo "  make docker-up     - Start all services in Docker"
+# 	@echo "  make docker-down   - Stop all Docker services"
+# 	@echo "  make clean         - Clean build artifacts"
+# 	@echo "  make proto         - Generate protobuf files"
+# 	@echo "  make dev-setup     - Set up development environment"
+# 	@echo ""
+
+# # Download dependencies
+# deps:
+# 	@echo "📦 Downloading Go dependencies..."
+# 	go mod download
+# 	go mod tidy
+
+# # Build all services
+# build:
+# 	@echo "🏗️  Building all microservices..."
+# 	CGO_ENABLED=0 go build -o bin/user-service ./cmd/user-service
+# 	CGO_ENABLED=0 go build -o bin/shipment-service ./cmd/shipment-service
+# 	CGO_ENABLED=0 go build -o bin/alert-service ./cmd/alert-service
+# 	CGO_ENABLED=0 go build -o bin/payment-service ./cmd/payment-service
+# 	CGO_ENABLED=0 go build -o bin/analytics-service ./cmd/analytics-service
+
+# # Run development environment
+# run:
+# 	@echo "🚀 Starting development environment..."
+# 	chmod +x scripts/run-all.sh
+# 	./scripts/run-all.sh
+
+# # Run tests
+# test:
+# 	@echo "🧪 Running tests..."
+# 	go test -v ./...
+
+# # Generate Swagger documentation
+# swagger:
+# 	@echo "📚 Generating Swagger documentation..."
+# 	swag init -g cmd/user-service/main.go -o api/swagger/user
+# 	swag init -g cmd/shipment-service/main.go -o api/swagger/shipment
+# 	swag init -g cmd/alert-service/main.go -o api/swagger/alert
+# 	swag init -g cmd/payment-service/main.go -o api/swagger/payment
+# 	swag init -g cmd/analytics-service/main.go -o api/swagger/analytics
+
+# # Generate protobuf files
+# proto:
+# 	@echo "🔧 Generating protobuf files..."
+# 	protoc --go_out=. --go_opt=paths=source_relative \
+# 		--go-grpc_out=. --go-grpc_opt=paths=source_relative \
+# 		api/proto/*.proto
+
+# # Start Docker services
+# docker-up:
+# 	@echo "🐳 Starting Docker services..."
+# 	docker-compose -f docker/docker-compose.yml up --build -d
+
+# # Stop Docker services
+# docker-down:
+# 	@echo "🛑 Stopping Docker services..."
+# 	docker-compose -f docker/docker-compose.yml down
+
+# # Stop Docker services and remove volumes
+# docker-clean:
+# 	@echo "🧹 Cleaning Docker services and volumes..."
+# 	docker-compose -f docker/docker-compose.yml down -v
+# 	docker system prune -f
+
+# # Clean build artifacts
+# clean:
+# 	@echo "🧹 Cleaning build artifacts..."
+# 	rm -rf bin/
+# 	go clean -cache
+# 	go clean -modcache
+
+# # Development setup
+# dev-setup: deps
+# 	@echo "🔧 Setting up development environment..."
+# 	@if [ ! -f .env ]; then \
+# 		echo "📝 Creating .env file..."; \
+# 		cp .env .env; \
+# 	fi
+# 	@echo "✅ Development environment ready!"
+# 	@echo ""
+# 	@echo "Next steps:"
+# 	@echo "1. Update .env with your API keys (Stripe, etc.)"
+# 	@echo "2. Run 'make run' to start all services"
+# 	@echo "3. Visit http://localhost:8001/swagger/index.html for API docs"
+
+# # Run individual services (for development)
+# run-user:
+# 	@echo "Starting User Service..."
+# 	go run ./cmd/user-service
+
+# run-shipment:
+# 	@echo "Starting Shipment Service..."
+# 	go run ./cmd/shipment-service
+
+# run-alert:
+# 	@echo "Starting Alert Service..."
+# 	go run ./cmd/alert-service
+
+# run-payment:
+# 	@echo "Starting Payment Service..."
+# 	go run ./cmd/payment-service
+
+# run-analytics:
+# 	@echo "Starting Analytics Service..."
+# 	go run ./cmd/analytics-service
+
+# # Database operations
+# db-migrate:
+# 	@echo "🗄️  Running database migrations..."
+# 	# Add migration commands here when implemented
+
+# db-seed:
+# 	@echo "🌱 Seeding database with sample data..."
+# 	# Add seed commands here when implemented
+
+# # Kafka operations
+# kafka-topics:
+# 	@echo "📋 Listing Kafka topics..."
+# 	docker-compose -f docker/docker-compose.yml exec kafka kafka-topics --bootstrap-server localhost:9092 --list
+
+# kafka-create-topics:
+# 	@echo " Creating Kafka topics..."
+# 	docker-compose -f docker/docker-compose.yml exec kafka kafka-topics --bootstrap-server localhost:9092 --create --if-not-exists --topic shipment-events --partitions 3 --replication-factor 1
+# 	docker-compose -f docker/docker-compose.yml exec kafka kafka-topics --bootstrap-server localhost:9092 --create --if-not-exists --topic alert-events --partitions 3 --replication-factor 1
+# 	docker-compose -f docker/docker-compose.yml exec kafka kafka-topics --bootstrap-server localhost:9092 --create --if-not-exists --topic payment-events --partitions 3 --replication-factor 1
+
+# # Monitoring
+# logs:
+# 	@echo "📋 Showing service logs..."
+# 	docker-compose -f docker/docker-compose.yml logs -f
+
+# health-check:
+# 	@echo "🏥 Checking service health..."
+# 	@curl -f http://localhost:8001/health && echo "✅ User Service OK" || echo "User Service DOWN"
+# 	@curl -f http://localhost:8002/health && echo "✅ Shipment Service OK" || echo "Shipment Service DOWN"
+# 	@curl -f http://localhost:8003/health && echo "✅ Alert Service OK" || echo "Alert Service DOWN"
+# 	@curl -f http://localhost:8004/health && echo "✅ Payment Service OK" || echo "Payment Service DOWN"
+# 	@curl -f http://localhost:8005/health && echo "✅ Analytics Service OK" || echo "Analytics Service DOWN"
